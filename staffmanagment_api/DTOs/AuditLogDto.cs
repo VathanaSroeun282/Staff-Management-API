@@ -21,5 +21,6 @@
             public int ChangedBy { get; set; }
             public int EmployeeID { get; set; }
         }
+       
     }
 }

@@ -19,17 +19,17 @@ namespace staffmanagment_api.Controllers
             _dbContext = dbContext;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAttendances()
+        public async Task<IActionResult> GetAlluditLogs()
         {
             try
             {
-                var all_attedances = await _dbContext!.AuditLogs
+                var all_auditLogs = await _dbContext!.AuditLogs
                     .Include(aud => aud.Employee)
                     .Select(aud => AuditLogMapper.ToDto(aud))
                     .ToArrayAsync();
-                if(all_attedances.Any())
+                if(all_auditLogs.Any())
                 {
-                    return Ok(all_attedances);
+                    return Ok(all_auditLogs);
                 }
                 return NotFound();
             }
@@ -43,8 +43,16 @@ namespace staffmanagment_api.Controllers
         {
             try
             {
-                var find_auditLog = await _dbContext!.AuditLogs.FindAsync(id);
-                if (find_auditLog == null) return NotFound($"ID = {id} not found!");
+                var find_auditLog = await _dbContext!.AuditLogs
+                   .Include(aud => aud.Employee)
+                   .Where(aud => aud.AuditLogID == id)
+                   .Select(aud => AuditLogMapper.ToDto(aud))
+                   .FirstOrDefaultAsync();
+                if (find_auditLog == null)
+                {
+                     return NotFound();
+                   
+                }
                 return Ok(find_auditLog);
             }
             catch(Exception ex)
