@@ -94,7 +94,7 @@ namespace staffmanagment_api.Controllers
             finally { _dbContext.Dispose(); }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUpdateLeaveRequest(int id, CreateLeaveRequestDto createLeaveRequestDto)
+        public async Task<IActionResult> UpdateLeaveRequest(int id, CreateLeaveRequestDto createLeaveRequestDto)
         {
             try
             {
