@@ -93,5 +93,31 @@ namespace staffmanagment_api.Controllers
             }
             finally { _dbContext.Dispose(); }
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUpdateLeaveRequest(int id, CreateLeaveRequestDto createLeaveRequestDto)
+        {
+            try
+            {
+                var leaveRequest = await _dbContext!.LeaveRequests.FindAsync(id);
+                if (leaveRequest == null)
+                {//
+                    return NotFound("Leave-Request record not found.");
+                }
+                // Update fields
+                leaveRequest.LeaveType = createLeaveRequestDto.LeaveType;
+                leaveRequest.StartDate = createLeaveRequestDto.StartDate;
+                leaveRequest.EndDate = createLeaveRequestDto.EndDate;
+                leaveRequest.Reason = createLeaveRequestDto.Reason;
+                leaveRequest.EmployeeID = createLeaveRequestDto.EmployeeID;
+                // Save changes
+                await _dbContext.SaveChangesAsync();
+                return Ok("Leave Request updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            finally { _dbContext?.Dispose(); }
+        }
     }
 }
