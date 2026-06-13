@@ -82,7 +82,7 @@ namespace staffmanagment_api.Controllers
             try
             {
                 var find_leaveRequest = await _dbContext!.LeaveRequests.FindAsync(id);
-                if (find_leaveRequest != null) return NotFound($"Leave Request ID = {id} Not Found!!!");
+                if (find_leaveRequest == null) return NotFound($"Leave Request ID = {id} Not Found!!!");
                 _dbContext!.LeaveRequests.Remove(find_leaveRequest);
                 await _dbContext.SaveChangesAsync();
                 return Ok($"Leave Request ID = {id} have been delete!");
