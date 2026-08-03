@@ -24,5 +24,7 @@
     {
         public int Rating { get; set; }
         public string? Comments { get; set; }
+        public int EmployeeID { get; set; }
+
     }
 }

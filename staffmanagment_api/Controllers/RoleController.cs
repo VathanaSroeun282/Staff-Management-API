@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using staffmanagment_api.Data.StaffManagementSystem.Data;
 using staffmanagment_api.DTOs;
+using staffmanagment_api.DTOs.staffmanagment_api.DTOs;
 using staffmanagment_api.Mappers;
 using staffmanagment_api.Models;
 
@@ -57,7 +58,7 @@ namespace staffmanagment_api.Controllers
                     RoleName = newRole.RoleName
                 });
                 await _context.SaveChangesAsync();
-                return Ok(newRole);
+                return Ok("New Role '"+newRole.RoleName+"' has been created!");
             }
             return NotFound("Your insert role is conflict! Please try again later!");
         }
@@ -72,6 +73,28 @@ namespace staffmanagment_api.Controllers
             _context.Roles.Remove(find_Role);
             await _context.SaveChangesAsync();
             return Ok($"Delete Role {find_Role.RoleName}");
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRole(int id, UpdateRoleDto createRoleDto)
+        {
+            try
+            {
+                var role = await _context!.Roles.FindAsync(id);
+                if (role == null)
+                {//
+                    return NotFound("Role record not found.");
+                }
+                // Update fields
+                role.RoleName = createRoleDto.RoleName;
+                // Save changes
+                await _context.SaveChangesAsync();
+                return Ok("Role has been updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            finally { _context?.Dispose(); }
         }
     }
 }

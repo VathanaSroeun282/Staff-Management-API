@@ -63,6 +63,8 @@ namespace staffmanagment_api.Controllers
         {
             try
             {
+                var checkEmployeeExisOrNot = _dbContext!.Employees.FirstOrDefault(emp => emp.EmployeeID == createPerformanceReviewDto.EmployeeID);
+                if (checkEmployeeExisOrNot == null) { return NotFound("Employee not found!"); }
                 _dbContext.Add(PerformanceReviewMapper.FromCreateDto(createPerformanceReviewDto));
                 await _dbContext.SaveChangesAsync();
                 return Ok("New Performance-Review was added");
@@ -70,19 +72,41 @@ namespace staffmanagment_api.Controllers
             catch (Exception ex) { return BadRequest(ex); }
             finally { _dbContext.Dispose(); }
         }
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> PostAddNewPerformanceReview(int id, UpdatePerformanceReviewDto updatePerformanceReviewDto)
+        {
+            try
+            {
+                var found_PerformanceReview = await _dbContext!.PerformanceReviews.FindAsync(id);
+                if (found_PerformanceReview == null) { return NotFound("Performance-Review not found!"); }
+                found_PerformanceReview.Rating = updatePerformanceReviewDto.Rating;
+                found_PerformanceReview.Comments = updatePerformanceReviewDto.Comments;
+                found_PerformanceReview.EmployeeID = updatePerformanceReviewDto.EmployeeID;
+                await _dbContext.SaveChangesAsync();
+                return Ok("Performance-Review has been updated");
+            }
+            catch (Exception ex) { return BadRequest(ex); }
+            finally { _dbContext.Dispose(); }
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletePerformanceReview(int id)
         {
             try
             {
-                var find_PerformanceReview = _dbContext!.PerformanceReviews?.FindAsync(id);
-                if (find_PerformanceReview == null) { return NotFound(); }
-                _dbContext!.Remove(find_PerformanceReview);
+                var find_PerformanceReview = await _dbContext.PerformanceReviews!.FindAsync(id);
+                if (find_PerformanceReview == null)
+                    return NotFound();
+
+                _dbContext.PerformanceReviews.Remove(find_PerformanceReview);
                 await _dbContext.SaveChangesAsync();
-                return Ok($"You have been delete a Performance-Review ID={id}");
+
+                return Ok($"You have deleted Performance-Review ID={id}");
             }
-            catch (Exception ex){ return BadRequest(ex); }
-            finally { _dbContext.Dispose(); }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }
