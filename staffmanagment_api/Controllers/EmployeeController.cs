@@ -87,6 +87,7 @@ namespace staffmanagment_api.Controllers
                     find_employee.Email = updateEmployeeDto.Email;
                     find_employee.PhoneNumber = updateEmployeeDto.PhoneNumber;
                     find_employee.Status = updateEmployeeDto.Status;
+                    find_employee.DepartmentID = updateEmployeeDto.DepartmentID;
                     find_employee.RoleID = updateEmployeeDto.RoleID;    
 
                     await _context!.SaveChangesAsync();

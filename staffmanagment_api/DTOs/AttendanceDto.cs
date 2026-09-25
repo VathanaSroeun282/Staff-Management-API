@@ -22,5 +22,6 @@
     {
         public DateTime ClockInTime { get; set; }
         public DateTime ClockOutTime { get; set; }
+        public int EmployeeID { get; set; }
     }
 }

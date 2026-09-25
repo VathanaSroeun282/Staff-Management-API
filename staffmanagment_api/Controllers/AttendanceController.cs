@@ -77,6 +77,7 @@ namespace staffmanagment_api.Controllers
             // Update fields
             attendance.ClockInTime = updateAttendanceDto.ClockInTime;
             attendance.ClockOutTime = updateAttendanceDto.ClockOutTime;
+            attendance.EmployeeID = updateAttendanceDto.EmployeeID;
 
             // Save changes
             await _context.SaveChangesAsync();
